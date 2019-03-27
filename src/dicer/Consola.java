@@ -79,7 +79,7 @@ public class Consola extends javax.swing.JFrame {
         String[] data = input.getText().toUpperCase().split("\\ ");
         input.setText("");
         
-        if(data[0].equals("HELP")){
+        if(data[0].equals("AYUDA")){
             log("Comandos Dicer:\n\tAYUDA: Muestra este mensaje."
                     + "\n\tHILOS n: Predispone el uso de n hilos."
                     + "\n\tDADOS n a: Establece la forma de los datos. n cantidad, a numero de caras."
