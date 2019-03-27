@@ -98,7 +98,7 @@ public class Consola extends javax.swing.JFrame {
                     else
                         log("El numero de hilos debe estar entre 1 y 100.");
                 } catch (Exception e) {
-                    System.out.println("Introduzca un numero en el primer parametro.");
+                    log("Introduzca un numero en el primer parametro.");
                 }
             }else{
                 log("Error de sintaxis.");
@@ -115,9 +115,9 @@ public class Consola extends javax.swing.JFrame {
                         error = true;
                     }
                     if(!error)
-                        System.out.println("Dados actualizados correctamente.");
+                        log("Dados actualizados correctamente.");
                 } catch (Exception e) {
-                    System.out.println("Introduzca un numero en el primer y segundo parametro.");
+                    log("Introduzca un numero en el primer y segundo parametro.");
                 }
             }else{
                 log("Error de sintaxis.");
@@ -147,7 +147,7 @@ public class Consola extends javax.swing.JFrame {
                             if(!error)
                                 log("Objetivo actualizado correctamente");
                         } catch (Exception e) {
-                            System.out.println("Introduzca un numero en el tercer parametro.");
+                            log("Introduzca un numero en el tercer parametro.");
                         }
                     }else
                         log("Error de sintaxis.");
@@ -170,7 +170,7 @@ public class Consola extends javax.swing.JFrame {
                             if(!error)
                                 log("Objetivo actualizado correctamente");
                         } catch (Exception e) {
-                            System.out.println("Introduzca un numero en el tercer y cuarto parametro.");
+                            log("Introduzca un numero en el tercer y cuarto parametro.");
                         }
                     }else
                         log("Error de sintaxis.");
