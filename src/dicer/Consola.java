@@ -89,7 +89,10 @@ public class Consola extends javax.swing.JFrame {
                     + "\n\tTIRAR: Comienza la simulacion."
                     + "\n\tMIRAR: Devuelve los resultados obtenidos."
                     + "\n\tPARAR: Detiene la simulacion y devuelve los resultados."
-                    + "\n\tLIMPIAR: Borra el log.");
+                    + "\n\tLIMPIAR: Borra el log."
+                    + "\n\tCONTADOR: ACTIVAR/DESACTIVAR"
+                    + "\n\tSERVIDOR: INICIAR/ESTADO/CERRAR: comienza/detiene el servidor o muestra las conexiones."
+                    + "\n\tCLIENTE: INICIAR/ESTADO/CERRAR: comienza/detiene como trabajador o muestra el estado de la conexion.");
         }else if(data[0].equals("HILOS")){
             if(data.length >= 2){
                 try {
@@ -190,6 +193,48 @@ public class Consola extends javax.swing.JFrame {
             log("Resultados parciales.\n"+Simulador.calcular());
         }else if(data[0].equals("LIMPIAR")){
             output.setText("");
+        }else if(data[0].equals("SERVIDOR")){
+            if(data.length >= 2){
+                if(data[1].equals("INICIAR")){
+                    Simulador.iniciarServidor();
+                    log("Servidor iniciado.");
+                }else if(data[1].equals("ESTADO")){
+                    log(Simulador.estadoServidor());
+                }else if(data[1].equals("CERRAR")){
+                    Simulador.detenerServidor();
+                    log("Servidor apagado.");
+                }
+            }else
+                log("Error de sintaxis.");
+        }else if(data[0].equals("CLIENTE")){
+            //Importante incluir la IP
+            if(data.length >= 2){
+                if(data[1].equals("INICIAR")){
+                    if(data.length >= 3){
+                        Simulador.iniciarCliente(data[2]);
+                        log("Cliente iniciado");
+                    }else
+                        log("Se necesita una direccion IP.");
+                }else if(data[1].equals("ESTADO")){
+                    log(Simulador.estadoCliente());
+                }else if(data[1].equals("CERRAR")){
+                    Simulador.detenerCliente();
+                    log("Cliente apagado");
+                }
+            }else
+                log("Error de sintaxis.");
+        }else if(data[0].equals("CONTADOR")){
+            //Importante incluir la IP
+            if(data.length >= 2){
+                if(data[1].equals("ACTIVAR")){
+                    Simulador.setMedidor(true);
+                    log("Contador activado.");
+                }else if(data[1].equals("DESACTIVAR")){
+                    Simulador.setMedidor(false);
+                    log("Contador desactivado.");
+                }
+            }else
+                log("Error de sintaxis.");
         }else{
             log("Comando no reconocido. Prueve AYUDA.");
         }
@@ -198,6 +243,10 @@ public class Consola extends javax.swing.JFrame {
 
     private void log(String text){
         output.setText(output.getText()+text+"\n");
+        output.setCaretPosition(output.getDocument().getLength());
+    }
+    public void mensaje(String log, String nombre){
+        log("["+nombre+"]: "+log);
     }
     
     

@@ -12,14 +12,29 @@ Simulador de tirar dados de forma aleatoria.
 +	MIRAR: Devuelve los resultados obtenidos.
 +	PARAR: Detiene la simulacion y devuelve los resultados.
 +	LIMPIAR: Borra el log.
++   CONTADOR: ACTIVAR/DESACTIVAR
++   SERVIDOR: INICIAR/ESTADO/CERRAR: comienza/detiene el servidor o muestra las conexiones.
++   CLIENTE: INICIAR/ESTADO/CERRAR: comienza/detiene como trabajador o muestra el estado de la conexion.
 ## Ejemplos
 Sacar un seis tirando una vez un dado de seis caras.
 ````
-dados 1 6
 objetivo sacar justo 6 1
 ````
 Sumar siete tirando cuatro dados de seis caras.
 ````
 dados 4 6
 objetivo sumar justo 7
+````
+Clusterizar una simulación.
+
+Servidor:
+````
+objetivo sumar justo 1
+servidor iniciar
+contador activar
+tirar
+````
+Cliente, remplazar la dirección por la IP del servidor:
+````
+cliente iniciar 127.0.0.1
 ````

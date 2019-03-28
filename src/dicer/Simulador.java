@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Simulador {
     
-    private static final long CASOS_POR_VUELCO = (long) 1e6;
+    private static final long CASOS_POR_VUELCO = (long) 50e6;
     private static DecimalFormat ENTERO, PROBABILIDAD;
     
     private static int hilos = 1;
@@ -25,6 +25,14 @@ public class Simulador {
     
     private static BigInteger casosExito, casosTotal;
     private static Thread[] threads;
+    private static Medidor medidor;
+    
+    /* Modos de funcionamiento
+        1. Simulacion individual
+        2. Servidor multicliente
+        3. Cliente trabajador
+    */
+    private static int modo = 1;
     
     public static void iniciar(){
         threads = null;
@@ -65,11 +73,25 @@ public class Simulador {
     public static int getCaras(){
         return caras;
     }
+    public static void setMedidor(boolean activado){
+        if(activado){
+            medidor = new Medidor();
+            medidor.iniciar();
+        }else
+            if(medidor != null){
+                medidor.detener();
+                medidor = null;
+            }
+    }
+    
     
     public static void setObjetivo(int obj, int d1, int d2){
         objetivo = obj;
         objD1 = d1;
         objD2 = d2;
+    }
+    public static String getObjetivo(){
+        return objetivo+"|"+objD1+"|"+objD2;
     }
     
     public static boolean simular(){
@@ -78,6 +100,14 @@ public class Simulador {
         
         casosExito = new BigInteger("0");
         casosTotal = new BigInteger("0");
+        
+        
+        if(modo == 2){
+            Servidor.tirar();
+            return true;
+        }
+        
+        
         Random rand = new Random();
         
         threads = new Thread[hilos];
@@ -129,12 +159,18 @@ public class Simulador {
         return true;
     }
     public static String detener(){
-        for(int i = 0; i < threads.length; i++){
-            threads[i].interrupt();
+        if(modo == 2){
+            Servidor.parar();
+        }else if(modo == 1 || modo == 3){
+            for(int i = 0; i < threads.length; i++){
+                threads[i].interrupt();
+            }
+            threads = null;
         }
-        threads = null;
         
-        return calcular();
+        if(modo != 3)
+            return calcular();
+        return "MODO CLIENTE";
     }
     public static String calcular(){
         try {
@@ -147,8 +183,50 @@ public class Simulador {
     }
     
     public static void volcar(long exito, long total){
-        casosExito = casosExito.add(BigInteger.valueOf(exito));
-        casosTotal = casosTotal.add(BigInteger.valueOf(total));
+        switch(modo){
+            case 2:
+            case 1:
+                casosExito = casosExito.add(BigInteger.valueOf(exito));
+                casosTotal = casosTotal.add(BigInteger.valueOf(total));
+                break;
+            case 3:
+                Cliente.enviar(exito, total);
+                break;
+        }
+        
+        if(medidor != null)
+            medidor.actualizar(total);
+    }
+    
+    
+    public static void iniciarServidor(){
+        modo = 2;
+        Servidor.init();
+    }
+    public static void detenerServidor(){
+        modo = 1;
+        Servidor.detener();
+    }
+    public static String estadoServidor(){
+        if(modo != 2)
+            return "El servidor no ha sido iniciado";
+        else
+            return Servidor.estado();
+    }
+    
+    public static void iniciarCliente(String ip){
+        modo = 3;
+        Cliente.init(ip);
+    }
+    public static void detenerCliente(){
+        modo = 1;
+        Cliente.detener();
+    }
+    public static String estadoCliente(){
+        if(modo != 3)
+            return "El cliente no ha sido iniciado";
+        else
+            return Cliente.estado();
     }
     
 }
